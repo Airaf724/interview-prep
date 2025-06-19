@@ -63,7 +63,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
         toast.success("account created plz sign in");
         router.push("/sign-in");
-        console.log("sign-up values", values);
       } else {
         const { email, password } = values;
 
@@ -86,7 +85,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
         toast.success("sign in successfull");
         router.push("/");
-        console.log("sign in ", values);
       }
     } catch (error) {
       console.log(error);
@@ -130,7 +128,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
               placeholder="Password"
               type="password"
             />
-            <Button type="submit">
+            <Button className="cursor-pointer" type="submit">
               {isSignIn ? "sign-in" : "create an account"}
             </Button>
           </form>

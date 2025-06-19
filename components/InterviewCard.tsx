@@ -5,8 +5,9 @@ import { getRandomInterviewCover } from "@/lib/utils";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import DisplayTechIcons from "./DisplayTechIcons";
+import { getFeedbackByInterviewId } from "@/lib/actions/general.action";
 
-const InterviewCard = ({
+const InterviewCard = async ({
   id,
   userId,
   role,
@@ -14,7 +15,29 @@ const InterviewCard = ({
   techstack,
   createdAt,
 }: InterviewCardProps) => {
-  const feedback = null as Feedback | null;
+  const interviewId = id;
+
+  // More explicit validation
+  let feedback = null;
+
+  if (userId && id && typeof id === "string" && typeof userId === "string") {
+    try {
+      feedback = await getFeedbackByInterviewId({
+        interviewId,
+        userId,
+      });
+    } catch (error) {
+      console.error("Error fetching feedback in InterviewCard:", error);
+    }
+  } else {
+    console.warn("Missing or invalid props:", {
+      userId: userId || "missing",
+      id: id || "missing",
+      userIdType: typeof userId,
+      idType: typeof id,
+    });
+  }
+
   const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
   const formattedDate = dayjs(
     feedback?.createdAt || createdAt || Date.now()

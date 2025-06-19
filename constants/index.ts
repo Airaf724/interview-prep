@@ -108,7 +108,7 @@ export const interviewer: CreateAssistantDTO = {
   },
   voice: {
     provider: "11labs",
-    voiceId: "sarah",
+    voiceId: "21m00Tcm4TlvDq8ikWAM",
     stability: 0.4,
     similarityBoost: 0.8,
     speed: 0.9,
@@ -228,3 +228,89 @@ export const dummyInterviews: Interview[] = [
     createdAt: "2024-03-14T15:30:00Z",
   },
 ];
+
+
+
+interface AssistantConfig {
+  name: string;
+  firstMessage: string;
+  transcriber: {
+    provider: string;
+    model: string;
+    language: string;
+  };
+  voice: {
+    provider: string;
+    voiceId: string;
+    stability: number;
+    similarityBoost: number;
+    speed: number;
+    style: number;
+    useSpeakerBoost: boolean;
+  };
+  model: {
+    provider: string;
+    model: string;
+    messages: {
+      role: string;
+      content: string;
+    }[];
+  };
+}
+
+export function createAssistantConfig(userName: string, formattedQuestions: string): AssistantConfig {
+  return {
+    name: "AI Interviewer",
+    firstMessage:
+      "Hello! Thank you for taking the time to speak with me today. I'm excited to learn more about you and your experience. Shall we begin with the first question?",
+    transcriber: {
+      provider: "deepgram",
+      model: "nova-2",
+      language: "en",
+    },
+    voice: {
+      provider: "11labs",
+      voiceId: "21m00Tcm4TlvDq8ikWAM", // Rachel - reliable default voice
+      stability: 0.5,
+      similarityBoost: 0.8,
+      speed: 0.9,
+      style: 0.4,
+      useSpeakerBoost: true,
+    },
+    model: {
+      provider: "openai",
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: `You are a professional job interviewer conducting a real-time voice interview with a candidate named ${userName}. Your goal is to assess their qualifications, motivation, and fit for the role.
+
+INTERVIEW QUESTIONS TO ASK:
+${formattedQuestions}
+
+INTERVIEW GUIDELINES:
+1. Follow the structured question flow above in order
+2. Ask one question at a time and wait for the candidate's response
+3. Listen actively and acknowledge responses before moving to the next question
+4. Ask brief follow-up questions if a response needs clarification
+5. Keep the conversation natural and flowing
+6. sure to give you more time to respond moving forward.
+
+COMMUNICATION STYLE:
+- Be professional yet warm and welcoming
+- Keep responses concise (this is a voice conversation)
+- Use conversational language, avoid robotic phrasing
+- Acknowledge good answers with brief positive feedback
+- If the candidate asks about the role or company, provide helpful general information
+
+INTERVIEW CONCLUSION:
+- After all questions are covered, thank the candidate
+- Inform them that the team will reach out with next steps
+- End on a positive and professional note
+
+Remember: Keep all responses short and conversational since this is a voice interview.`,
+        },
+      ],
+    },
+  };
+}

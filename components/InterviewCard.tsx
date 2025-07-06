@@ -22,10 +22,12 @@ const InterviewCard = async ({
 
   if (userId && id && typeof id === "string" && typeof userId === "string") {
     try {
-      feedback = await getFeedbackByInterviewId({
-        interviewId,
-        userId,
-      });
+      if (interviewId) {
+        feedback = await getFeedbackByInterviewId({
+          interviewId,
+          userId,
+        });
+      }
     } catch (error) {
       console.error("Error fetching feedback in InterviewCard:", error);
     }
